@@ -5,21 +5,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (!tree) {
     // eslint-disable-next-line no-console
-    console.error('tree element not found');
+    console.error('Tree element not found');
 
     return;
   }
 
-  tree.addEventListener('click', function (e) {
-    if (e.target.tagName === 'LI') {
-      const childUl = e.target.querySelector('ul');
+  // Hide ONLY nested lists, keeping first-level branches visible
+  tree.querySelectorAll('li > ul').forEach((ul) => (ul.style.display = 'none'));
 
-      if (childUl) {
-        childUl.style.display =
-          childUl.style.display === 'none' ? 'block' : 'none';
-      }
+  tree.addEventListener('click', function (e) {
+    const target = e.target;
+
+    if (target.tagName === 'LI') {
+      const childUls = target.querySelectorAll(':scope > ul');
+
+      childUls.forEach((ul) => {
+        ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
+      });
     }
   });
-
-  tree.querySelectorAll('ul').forEach((ul) => (ul.style.display = 'none'));
 });
